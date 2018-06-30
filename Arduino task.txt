@@ -1,0 +1,40 @@
+const int switch_key = 2;
+const int led = 13;
+const int Temperature = A0;
+
+volatile byte state = LOW;
+int val = 0;
+
+unsigned long interval = 3000;
+unsigned long previousMillis = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(led, OUTPUT); // Sets the led as an Output
+  pinMode(switch_key, INPUT_PULLUP);   // Sets the switch_key as an input
+  attachInterrupt(digitalPinToInterrupt(switch_key),blink,CHANGE); //attach the interrupt to the pin
+}
+
+void loop() {
+  unsigned long currentMillis=millis();
+
+  if((unsigned long)(currentMillis-previousMillis)>= interval){
+	val= analogRead(Temperature);
+    Serial.println(val);
+    previousMillis=millis();
+    }
+}
+
+void blink(){
+  state = !state;
+  digitalWrite(led,state);
+  Serial.println("Pressed");
+  if(state==LOW)
+  {
+    Serial.println("OFF");
+  }
+   else
+   {
+    Serial.println("ON");
+   }
+  }
